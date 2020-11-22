@@ -22,7 +22,7 @@ const options = {
 
 const channel_concat_string = [];
 for (let entry = 0; entry < TARGET_CHANNELS.length; entry++) {
-  channel_concat_string.push(entry + ' ');
+  channel_concat_string.push(TARGET_CHANNELS[entry] + ' ');
 }
 
 const client = new tmi.Client(options);
@@ -32,13 +32,16 @@ client.connect().catch(console.error);
 client.on('message', (channel, userstate, message, self) => {
   if (self) return;
 
-  let mod = MODS.some((mod) => userstate.username.toLowerCase().includes(mod));
+  //let mod = MODS.some((mod) => userstate.username.toLowerCase().includes(mod));
+  let isMod = userstate.mod || userstate['user-type'] === 'mod';
+  let isBroadcaster = channel.slice(1) === userstate.username;
+  let mod = isMod || isBroadcaster;
 
   // Hello Message
-  if (message.toLowerCase() === '!alena') {
+  if (message.toLowerCase() === '!alena' && mod) {
     client.say(
       channel,
-      `/me Alena_Bot: Ready to ban in the following channels: ${channel_concat_string}`
+      `/me Alena_Bot: Ready in the following channels: ${channel_concat_string}`
     );
   }
 
@@ -46,7 +49,6 @@ client.on('message', (channel, userstate, message, self) => {
 
   if (message.toLowerCase().startsWith('!allban') && mod) {
     let input = message.split(' ');
-    console.log(input.length);
     if (input.length < 2) {
       return;
     } else {
