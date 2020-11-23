@@ -57,10 +57,15 @@ client.on('message', (channel, userstate, message, self) => {
           `Alena_Bot ban performed by ${userstate.username}`
         );
       }
-      fs.appendFile('bans.txt', `${input[1]},\n`, 'utf8', function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-      });
+      fs.appendFile(
+        'bans.txt',
+        `${userstate.username}\t${input[1]},\n`,
+        'utf8',
+        function (err) {
+          if (err) throw err;
+          console.log('Saved!');
+        }
+      );
     }
   }
 
@@ -75,10 +80,15 @@ client.on('message', (channel, userstate, message, self) => {
         console.log(TARGET_CHANNELS[target], input[1], userstate.username);
         client.say(TARGET_CHANNELS[target], `/unban ${input[1]}`);
       }
-      fs.appendFile('bans.txt', `${input[1]} UNBANNED,\n`, 'utf8', function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-      });
+      fs.appendFile(
+        'bans.txt',
+        `${userstate.username}\t${input[1]}\tUNBANNED,\n`,
+        'utf8',
+        function (err) {
+          if (err) throw err;
+          console.log('Saved!');
+        }
+      );
     }
   }
 
