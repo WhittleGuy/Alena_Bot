@@ -20,10 +20,7 @@ const options = {
   channels: CHANNEL_NAMES,
 };
 
-const channel_concat_string = [];
-for (let entry = 0; entry < TARGET_CHANNELS.length; entry++) {
-  channel_concat_string.push(TARGET_CHANNELS[entry] + ' ');
-}
+const fs = require('fs');
 
 const client = new tmi.Client(options);
 
@@ -41,7 +38,7 @@ client.on('message', (channel, userstate, message, self) => {
   if (message.toLowerCase() === '!alena' && mod) {
     client.say(
       channel,
-      `/me Alena_Bot: Ready in the following channels: ${channel_concat_string}`
+      `/me Alena_Bot: Ready in the following channels: ${TARGET_CHANNELS}`
     );
   }
 
@@ -60,6 +57,28 @@ client.on('message', (channel, userstate, message, self) => {
           `Alena_Bot ban performed by ${userstate.username}`
         );
       }
+      fs.appendFile('bans.txt', `${input[1]},\n`, 'utf8', function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
+    }
+  }
+
+  //------------------------------------------------------------------------------------------
+
+  if (message.toLowerCase().startsWith('!allunban') && mod) {
+    let input = message.split(' ');
+    if (input.length < 2) {
+      return;
+    } else {
+      for (let target = 0; target < TARGET_CHANNELS.length; target++) {
+        console.log(TARGET_CHANNELS[target], input[1], userstate.username);
+        client.say(TARGET_CHANNELS[target], `/unban ${input[1]}`);
+      }
+      fs.appendFile('bans.txt', `${input[1]} UNBANNED,\n`, 'utf8', function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
     }
   }
 
