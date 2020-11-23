@@ -29,12 +29,14 @@ client.connect().catch(console.error);
 client.on('message', (channel, userstate, message, self) => {
   if (self) return;
 
-  //let mod = MODS.some((mod) => userstate.username.toLowerCase().includes(mod));
+  // Check for mod status of user
   let isMod = userstate.mod || userstate['user-type'] === 'mod';
+  // Check for broadcaster status of user
   let isBroadcaster = channel.slice(1) === userstate.username;
+  // Include both mods and broadcasters as mods
   let mod = isMod || isBroadcaster;
 
-  // Hello Message
+  // Check channels that should be connected
   if (message.toLowerCase() === '!alena' && mod) {
     client.say(
       channel,
@@ -44,11 +46,14 @@ client.on('message', (channel, userstate, message, self) => {
 
   //------------------------------------------------------------------------------------------
 
+  // BAN Functionality
   if (message.toLowerCase().startsWith('!allban') && mod) {
     let input = message.split(' ');
+    // Not enough args
     if (input.length < 2) {
       return;
     } else {
+      // Loop through all channels banning the user name
       for (let target = 0; target < TARGET_CHANNELS.length; target++) {
         console.log(TARGET_CHANNELS[target], input[1], userstate.username);
         client.ban(
@@ -57,6 +62,7 @@ client.on('message', (channel, userstate, message, self) => {
           `Alena_Bot ban performed by ${userstate.username}`
         );
       }
+      // Append ban message to log file
       fs.appendFile(
         'bans.txt',
         `${userstate.username}\t${input[1]},\n`,
@@ -71,6 +77,7 @@ client.on('message', (channel, userstate, message, self) => {
 
   //------------------------------------------------------------------------------------------
 
+  // UNBAN Functionality
   if (message.toLowerCase().startsWith('!allunban') && mod) {
     let input = message.split(' ');
     if (input.length < 2) {
