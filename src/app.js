@@ -61,7 +61,7 @@ client.on('message', (channel, userstate, message, self) => {
           input[1],
           `Alena_Bot ban performed by ${userstate.username}`
         );
-	client.say(TARGET_CHANNELS[target], `/me yeet.`);
+        client.say(TARGET_CHANNELS[target], `BOP`);
       }
       // Append ban message to log file
       fs.appendFile(
