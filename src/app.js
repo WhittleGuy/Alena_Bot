@@ -70,7 +70,7 @@ client.on('message', (channel, userstate, message, self) => {
         'utf8',
         function (err) {
           if (err) throw err;
-          console.log('Saved!');
+          console.log(err);
         }
       );
     }
@@ -94,7 +94,7 @@ client.on('message', (channel, userstate, message, self) => {
         'utf8',
         function (err) {
           if (err) throw err;
-          console.log('Saved!');
+          console.log(err);
         }
       );
     }
